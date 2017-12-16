@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/jlengstorf/learn-rollup.git"
+    "url": "git+ssh://git@github.com/cpt-chewieeee/z-ui-kit.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jlengstorf/learn-rollup/issues"
+    "url": "https://github.com/cpt-chewieeee/z-ui-kit.git"
   },
-  "homepage": "https://github.com/jlengstorf/learn-rollup#readme",
+  "homepage": "",
   "devDependencies": {
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-es2015": "^6.24.1",
