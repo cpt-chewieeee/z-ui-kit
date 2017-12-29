@@ -16,7 +16,8 @@ import cssnano from 'cssnano';
 export default {
   entry: 'src/scripts/main.js',
   dest: 'build/js/main.min.js',
-  format: 'iife',
+  format: 'umd',
+  moduleName: 'z-ui-kit',
   sourceMap: 'inline',
   plugins: [
     postcss({
