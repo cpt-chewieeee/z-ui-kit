@@ -219,6 +219,8 @@ var Item = function (_React$Component) {
   createClass(Item, [{
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       var style = {
         backgroundColor: '#fff',
         color: '#000'
@@ -228,7 +230,9 @@ var Item = function (_React$Component) {
       }
       return React.createElement(
         'li',
-        { className: 'zuk-hex-item' },
+        { className: 'zuk-hex-item', onClick: function onClick() {
+            return _this2.props.onClick && _this2.props.onClick(_this2.props.item);
+          } },
         React.createElement(
           'div',
           { className: 'zuk-hex-container' },
@@ -256,7 +260,8 @@ var Item = function (_React$Component) {
 
 Item.propTypes = {
   item: PropTypes.object.isRequired,
-  style: PropTypes.object
+  style: PropTypes.object,
+  onClick: PropTypes.func
 };
 
 var List = function (_React$Component) {
@@ -278,6 +283,7 @@ var List = function (_React$Component) {
         this.props.list.map(function (item, key) {
           return React.createElement(Item, { key: key,
             item: item,
+            onClick: _this2.props.onClick,
             defaultIcon: _this2.props.defaultIcon,
             style: _this2.props.style
           });
@@ -291,7 +297,8 @@ var List = function (_React$Component) {
 List.propTypes = {
   list: PropTypes.array.isRequired,
   defaultIcon: PropTypes.string.isRequired,
-  style: PropTypes.object
+  style: PropTypes.object,
+  onClick: PropTypes.func
 };
 
 __$styleInject(".zuk-hex-wrapper {\n  margin-top: 6%;\n}\n.zuk-hex-list {\n  display: flex;\n  flex-wrap: wrap;\n  width: 90%;\n  margin: 0 auto;\n  overflow: hidden;\n  font-size: 15px;\n  list-style-type: none;\n}\n\n.zuk-hex-item {\n  position: relative;\n  visibility: hidden;\n  outline: 1px solid transparent; /* fix for jagged edges in FF on hover transition */\n}\n.zuk-hex-item::after{\n  content: '';\n  display: block;\n  padding-bottom: 86.602%;  /* =  100 / tan(60) * 1.5 */\n}\n.zuk-hex-container{\n  position: absolute;\n  width: 96%;\n  padding-bottom: 110.851%; /* =  width / sin(60) */\n  margin: 0 2%;\n  overflow: hidden;\n  visibility: hidden;\n  outline:1px solid transparent; /* fix for jagged edges in FF on hover transition */\n  -webkit-transform: rotate3d(0,0,1,-60deg) skewY(30deg);\n      -ms-transform: rotate3d(0,0,1,-60deg) skewY(30deg);\n          transform: rotate3d(0,0,1,-60deg) skewY(30deg);\n}\n.zuk-hex-container * {\n  position: absolute;\n  visibility: visible;\n  outline: 1px solid transparent; /* fix for jagged edges in FF on hover transition */\n}\n.zuk-hex-a {\n    display: block;\n    width: 100%;\n    height: 100%;\n    text-align: center;\n    color: #000;\n    overflow: hidden;\n    -webkit-transform: skewY(-30deg) rotate3d(0,0,1,60deg);\n        -ms-transform: skewY(-30deg) rotate3d(0,0,1,60deg);\n            transform: skewY(-30deg) rotate3d(0,0,1,60deg);\n}\n\n/*** HEX CONTENT ***/\n.zuk-hex-item img {\n  left: -100%;\n  right: -100%;\n  width: auto;\n  height: 100%;\n  margin: 0 auto;\n  -webkit-transform: rotate3d(0,0,0,0deg);\n  -ms-transform: rotate3d(0,0,0,0deg);\n  transform: rotate3d(0,0,0,0deg);\n}\n\n.zuk-hex-item h1, .zuk-hex-item p {\n  width: 100%;\n  padding: 5%;\n  box-sizing:border-box;\n  font-weight: 300;\n  -webkit-transition:  -webkit-transform .2s ease-out, opacity .3s ease-out;\n  transition: transform .2s ease-out, opacity .3s ease-out;\n}\n.zuk-hex-item h1 {\n  bottom: 50%;\n  padding-top:50%;\n  font-size: 1.5em;\n  z-index: 1;\n  -webkit-transform: translate3d(0,-100%,0);\n      -ms-transform: translate3d(0,-100%,0);\n          transform: translate3d(0,-100%,0);\n}\n.zuk-hex-item h1::after {\n  content: '';\n  position: absolute;\n  bottom: 0;\n  left: 45%;\n  width: 10%;\n  text-align: center;\n}\n.zuk-hex-item p {\n  top: 50%;\n  padding-bottom:50%;\n  -webkit-transform: translate3d(0,100%,0);\n      -ms-transform: translate3d(0,100%,0);\n          transform: translate3d(0,100%,0);\n}\n\n\n/*** HOVER EFFECT  ***/\n.zuk-hex-a:hover h1, .zuk-hex-a:focus h1,\n.zuk-hex-a:hover p, .zuk-hex-a:focus p{\n  -webkit-transform: translate3d(0,0,0);\n      -ms-transform: translate3d(0,0,0);\n          transform: translate3d(0,0,0);\n}\n\n/*** HEXAGON SIZING AND EVEN ROW INDENTATION ***/\n@media (min-width:1201px) { /* <- 5-4  hexagons per row */\n  .zuk-hex-list {\n    padding-bottom: 4.4%\n  }\n  .zuk-hex-item {\n    width: 20%; /* = 100 / 5 */\n  }\n  .zuk-hex-item:nth-child(9n+6) { /* first hexagon of even rows */\n    margin-left: 10%;  /* = width of .hex / 2  to indent even rows */\n  }\n}\n\n@media (max-width: 1200px) and (min-width:901px) { /* <- 4-3  hexagons per row */\n  .zuk-hex-list {\n    padding-bottom: 5.5%\n  }\n  .zuk-hex-item {\n    width: 25%; /* = 100 / 4 */\n  }\n  .zuk-hex-item:nth-child(7n+5) { /* first hexagon of even rows */\n    margin-left:12.5%;  /* = width of .hex / 2  to indent even rows */\n  }\n}\n\n@media (max-width: 900px) and (min-width:601px) { /* <- 3-2  hexagons per row */\n  .zuk-hex-list {\n    padding-bottom: 7.4%\n  }\n  .zuk-hex-item {\n    width: 33.333%; /* = 100 / 3 */\n  }\n  .zuk-hex-item:nth-child(5n+4) { /* first hexagon of even rows */\n    margin-left:16.666%;  /* = width of .hex / 2  to indent even rows */\n  }\n}\n\n@media (max-width: 600px) { /* <- 2-1  hexagons per row */\n  .zuk-hex-list {\n    padding-bottom: 11.2%\n  }\n  .zuk-hex-item {\n    width: 50%; /* = 100 / 3 */\n  }\n  .zuk-hex-item:nth-child(3n+3) { /* first hexagon of even rows */\n    margin-left:25%;  /* = width of .hex / 2  to indent even rows */\n  }\n}\n\n@media (max-width: 400px) {\n    .zuk-hex-list {\n        font-size: 13px;\n    }\n}\n", undefined);
@@ -310,7 +317,7 @@ var HexagonList = function (_React$Component) {
       return React.createElement(
         'div',
         { className: 'zuk-kex-wrapper' },
-        React.createElement(List, { list: this.props.list, defaultIcon: this.props.defaultIcon, style: this.props.style })
+        React.createElement(List, this.props)
       );
     }
   }]);
@@ -320,7 +327,8 @@ var HexagonList = function (_React$Component) {
 HexagonList.propTypes = {
   list: PropTypes.array.isRequired,
   defaultIcon: PropTypes.string.isRequired,
-  style: PropTypes.object
+  style: PropTypes.object,
+  onClick: PropTypes.func
 };
 
 var Hexagon = HexagonList;
