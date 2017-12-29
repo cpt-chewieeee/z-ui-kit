@@ -4,6 +4,13 @@ import './App.css';
 import { Hexagon } from 'z-ui-kit';
 // import {}
 class App extends Component {
+  constructor(props) {
+    super(props) 
+    this.handleClick = this.handleClick.bind(this)
+  }
+  handleClick (item) {
+    console.log(item)
+  }
   render() {
     const list = [
     ]
@@ -16,6 +23,7 @@ class App extends Component {
         <Hexagon 
           list={list}
           defaultIcon={logo}
+          onClick={this.handleClick}
           style={{
             backgroundColor: 'red',
             color: 'white'

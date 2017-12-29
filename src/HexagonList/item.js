@@ -4,7 +4,8 @@ import PropTypes from 'prop-types'
 export default class Item extends React.Component {
   static propTypes = {
     item: PropTypes.object.isRequired,
-    style: PropTypes.object
+    style: PropTypes.object,
+    onClick: PropTypes.func
   }
   render () {
     let style = {
@@ -15,7 +16,7 @@ export default class Item extends React.Component {
       style = this.props.style
     }
     return (
-      <li className='zuk-hex-item' >
+      <li className='zuk-hex-item' onClick={() => (this.props.onClick && this.props.onClick(this.props.item))}>
         <div className='zuk-hex-container'>
           <a className='zuk-hex-a'>
             <img src={this.props.item.src ? this.props.item.src : this.props.defaultIcon} alt='' />

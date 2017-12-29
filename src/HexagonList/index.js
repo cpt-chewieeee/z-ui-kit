@@ -7,12 +7,13 @@ export default class HexagonList extends React.Component {
   static propTypes = {
     list: PropTypes.array.isRequired,
     defaultIcon: PropTypes.string.isRequired,
-    style: PropTypes.object
+    style: PropTypes.object,
+    onClick: PropTypes.func
   }
   render () {
     return (
       <div className='zuk-kex-wrapper'>
-        <List list={this.props.list} defaultIcon={this.props.defaultIcon} style={this.props.style} />
+        <List {...this.props} />
       </div>
     )
   }
