@@ -15,10 +15,21 @@ import cssnano from 'cssnano';
 
 export default {
   entry: 'src/scripts/main.js',
-  dest: 'build/js/main.min.js',
-  format: 'umd',
-  moduleName: 'z-ui-kit',
-  sourceMap: 'inline',
+  output: [
+    {
+      file: 'dist/main.js',
+      format: 'cjs'
+    },
+    {
+      file: 'dist/main.es.js',
+      format: 'es'
+    }
+  ],
+  external: [
+    'react',
+    'react-dom',
+    'prop-types'
+  ],
   plugins: [
     postcss({
       plugins: [
