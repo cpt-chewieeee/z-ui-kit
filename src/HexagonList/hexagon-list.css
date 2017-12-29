@@ -50,7 +50,7 @@
             transform: skewY(-30deg) rotate3d(0,0,1,60deg);
 }
 
-/*** HEX CONTENT **********************************************************************/
+/*** HEX CONTENT ***/
 .zuk-hex-item img {
   left: -100%;
   right: -100%;
@@ -58,18 +58,17 @@
   height: 100%;
   margin: 0 auto;
   -webkit-transform: rotate3d(0,0,0,0deg);
-      -ms-transform: rotate3d(0,0,0,0deg);
-          transform: rotate3d(0,0,0,0deg);
+  -ms-transform: rotate3d(0,0,0,0deg);
+  transform: rotate3d(0,0,0,0deg);
 }
 
 .zuk-hex-item h1, .zuk-hex-item p {
   width: 100%;
   padding: 5%;
   box-sizing:border-box;
-  background-color: yellow;
   font-weight: 300;
   -webkit-transition:  -webkit-transform .2s ease-out, opacity .3s ease-out;
-          transition:          transform .2s ease-out, opacity .3s ease-out;
+  transition: transform .2s ease-out, opacity .3s ease-out;
 }
 .zuk-hex-item h1 {
   bottom: 50%;
@@ -87,7 +86,6 @@
   left: 45%;
   width: 10%;
   text-align: center;
-  border-bottom: 1px solid #fff;
 }
 .zuk-hex-item p {
   top: 50%;
@@ -98,7 +96,7 @@
 }
 
 
-/*** HOVER EFFECT  **********************************************************************/
+/*** HOVER EFFECT  ***/
 .zuk-hex-a:hover h1, .zuk-hex-a:focus h1,
 .zuk-hex-a:hover p, .zuk-hex-a:focus p{
   -webkit-transform: translate3d(0,0,0);
@@ -106,7 +104,7 @@
           transform: translate3d(0,0,0);
 }
 
-/*** HEXAGON SIZING AND EVEN ROW INDENTATION *****************************************************************/
+/*** HEXAGON SIZING AND EVEN ROW INDENTATION ***/
 @media (min-width:1201px) { /* <- 5-4  hexagons per row */
   .zuk-hex-list {
     padding-bottom: 4.4%
