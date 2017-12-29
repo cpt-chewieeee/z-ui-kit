@@ -1,8 +1,3 @@
-// Import styles (automatically injected into <head>).
-import '../styles/main.css';
-import '../styles/hexagon-list.css';
-import DfsLoader from '../DfsLoader';
+import hexagon from '../HexagonList'
 
-export default {
-  DfsLoader
-};
+export const Hexagon = hexagon

@@ -1,27 +1,20 @@
-// Rollup plugins
-import babel from 'rollup-plugin-babel';
-import eslint from 'rollup-plugin-eslint';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import replace from 'rollup-plugin-replace';
-import uglify from 'rollup-plugin-uglify';
-import postcss from 'rollup-plugin-postcss';
+import babel from 'rollup-plugin-babel'
+import commonjs from 'rollup-plugin-commonjs'
+import postcss from 'rollup-plugin-postcss'
+import resolve from 'rollup-plugin-node-resolve'
 
-// PostCSS plugins
-import simplevars from 'postcss-simple-vars';
-import nested from 'postcss-nested';
-import cssnext from 'postcss-cssnext';
-import cssnano from 'cssnano';
+import pkg from './package.json'
 
 export default {
-  entry: 'src/scripts/main.js',
+  input: 'src/scripts/main.js',
+  name: 'zuikit',
   output: [
     {
-      file: 'dist/main.js',
+      file: pkg.main,
       format: 'cjs'
     },
     {
-      file: 'dist/main.es.js',
+      file: pkg.module,
       format: 'es'
     }
   ],
@@ -30,34 +23,16 @@ export default {
     'react-dom',
     'prop-types'
   ],
+  globals: {
+    'react': 'react',
+    'prop-types': 'prop-types'
+  },
   plugins: [
-    postcss({
-      plugins: [
-        simplevars(),
-        nested(),
-        cssnext({ warnForDuplicates: false, }),
-        cssnano(),
-      ],
-      extensions: [ '.css' ],
-    }),
-    resolve({
-      jsnext: true,
-      main: true,
-      browser: true,
-    }),
-    commonjs(),
-    eslint({
-      exclude: [
-        'src/styles/**',
-      ]
-    }),
+    postcss({}),
     babel({
-      exclude: 'node_modules/**',
+      exclude: 'node_modules/**'
     }),
-    replace({
-      exclude: 'node_modules/**',
-      ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
-    }),
-    (process.env.NODE_ENV === 'production' && uglify()),
-  ],
-};
+    resolve(),
+    commonjs()
+  ]
+}
