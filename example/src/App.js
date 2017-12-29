@@ -16,6 +16,10 @@ class App extends Component {
         <Hexagon 
           list={list}
           defaultIcon={logo}
+          style={{
+            backgroundColor: 'red',
+            color: 'white'
+          }}
         />
        
       </div>
