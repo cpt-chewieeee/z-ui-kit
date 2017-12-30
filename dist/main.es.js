@@ -336,8 +336,8 @@ var Node = function () {
 
     this.getNeighbours = this.getNeighbours.bind(this);
     this.allWallsIntact = this.allWallsIntact.bind(this);
-    this.knockdownWallTo = this.knockdownWallTo.bind(this);
-    this.draw = this.draw.bind(this);
+    this.wallsToggle = this.wallsToggle.bind(this);
+    this.render = this.render.bind(this);
   }
 
   createClass(Node, [{
@@ -379,8 +379,8 @@ var Node = function () {
       return this.walls.join('') === '111111';
     }
   }, {
-    key: 'knockdownWallTo',
-    value: function knockdownWallTo(node) {
+    key: 'wallsToggle',
+    value: function wallsToggle(node) {
       var x_diff = node.x - this.x;
       var y_diff = node.y - this.y;
       var wall = null;
@@ -415,42 +415,42 @@ var Node = function () {
      */
 
   }, {
-    key: 'draw',
-    value: function draw(ctx, stats) {
+    key: 'render',
+    value: function render(ctx, stats) {
       // console.log('--1->', ctx)
       // console.log('--2->', stats)
       if (this.allWallsIntact()) return;
-      var px = this.x * stats.cellWidth;
-      var py = this.y * (stats.cellOffset + stats.cellSideLength);
+      var px = this.x * stats.nodeWidth;
+      var py = this.y * (stats.nodeOffset + stats.nodeSideLength);
 
       if (this.y % 2 !== 0) {
-        px += stats.cellHalfWidth;
+        px += stats.nodeHalfWidth;
       }
       ctx.beginPath();
 
       if (this.walls[0]) {
-        ctx.moveTo(px + stats.cellHalfWidth, py);
-        ctx.lineTo(px + stats.cellWidth, py + stats.cellOffset);
+        ctx.moveTo(px + stats.nodeHalfWidth, py);
+        ctx.lineTo(px + stats.nodeWidth, py + stats.nodeOffset);
       }
       if (this.walls[1]) {
-        ctx.moveTo(px + stats.cellWidth, py + stats.cellOffset);
-        ctx.lineTo(px + stats.cellWidth, py + stats.cellHeight - stats.cellOffset);
+        ctx.moveTo(px + stats.nodeWidth, py + stats.nodeOffset);
+        ctx.lineTo(px + stats.nodeWidth, py + stats.nodeHeight - stats.nodeOffset);
       }
       if (this.walls[2]) {
-        ctx.moveTo(px + stats.cellWidth, py + stats.cellHeight - stats.cellOffset);
-        ctx.lineTo(px + stats.cellHalfWidth, py + stats.cellHeight);
+        ctx.moveTo(px + stats.nodeWidth, py + stats.nodeHeight - stats.nodeOffset);
+        ctx.lineTo(px + stats.nodeHalfWidth, py + stats.nodeHeight);
       }
       if (this.walls[3]) {
-        ctx.moveTo(px + stats.cellHalfWidth, py + stats.cellHeight);
-        ctx.lineTo(px, py + stats.cellHeight - stats.cellOffset);
+        ctx.moveTo(px + stats.nodeHalfWidth, py + stats.nodeHeight);
+        ctx.lineTo(px, py + stats.nodeHeight - stats.nodeOffset);
       }
       if (this.walls[4]) {
-        ctx.moveTo(px, py + stats.cellHeight - stats.cellOffset);
-        ctx.lineTo(px, py + stats.cellOffset);
+        ctx.moveTo(px, py + stats.nodeHeight - stats.nodeOffset);
+        ctx.lineTo(px, py + stats.nodeOffset);
       }
       if (this.walls[5]) {
-        ctx.moveTo(px, py + stats.cellOffset);
-        ctx.lineTo(px + stats.cellHalfWidth, py);
+        ctx.moveTo(px, py + stats.nodeOffset);
+        ctx.lineTo(px + stats.nodeHalfWidth, py);
       }
 
       ctx.closePath();
@@ -464,17 +464,18 @@ var Node = function () {
 
 var Maze$1 = function () {
   function Maze(domEl) {
+    var cb = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     classCallCheck(this, Maze);
 
     if (!domEl) {
       return new Error('require domEl');
     }
     this.canvas = document.querySelector(domEl);
-
+    this.cb = cb;
     this.ctx = this.canvas.getContext('2d');
-    this.width = 6;
-    this.height = 4;
-    this.nodeSideLength = 12;
+    this.width = 16;
+    this.height = 8;
+    this.nodeSideLength = 20; //12
 
     this.nodeOffset = Math.sin(Math.PI / 180 * 30) * this.nodeSideLength; // sin (30°) * s
     this.nodeHalfWidth = Math.cos(Math.PI / 180 * 30) * this.nodeSideLength; // distance: radius = cos( 30° ) * s
@@ -490,14 +491,14 @@ var Maze$1 = function () {
     this.init = this.init.bind(this);
     this.build = this.build.bind(this);
     this.loop = this.loop.bind(this);
-    this.draw = this.draw.bind(this);
+    this.render = this.render.bind(this);
   }
 
   createClass(Maze, [{
     key: 'init',
     value: function init() {
       this.canvas.width = this.width * this.nodeWidth + this.nodeWidth;
-      this.canvas.height = this.height * this.nodeHeight - 16;
+      this.canvas.height = this.height * (this.nodeHeight / 2) + 100;
       this.build();
     }
   }, {
@@ -512,14 +513,10 @@ var Maze$1 = function () {
           this.mazeMap[_i][_j] = new Node(_i, _j);
         }
       }
-      console.log(this.mazeMap);
-      // this.currentCell = this.mazeMap[0][0]
       var i = Math.floor(Math.random() * this.width);
       var j = Math.floor(Math.random() * this.height);
-      // console.log('i', i)
-      // console.log('j', j)
+
       this.currentNode = this.mazeMap[i][j]; // random generator :D
-      // console.log('===>', this.currentCell)
       this.vistedNodes = 1;
 
       this.loop();
@@ -531,47 +528,47 @@ var Maze$1 = function () {
 
       if (this.vistedNodes === this.totalNodes) {
         window.setTimeout(function () {
-          _this.build();
+          // this.build() // restart
+          if (_this.cb) {
+            _this.cb(_this);
+          }
         }, 2500);
         return;
       }
       var neighbours = this.currentNode.getNeighbours(this.mazeMap);
-      // console.log('--neighbors->', neighbours)
-      var nextCell = null;
+
+      var nextNode = null;
       if (neighbours.length) {
-        // console.log('1')
-        nextCell = neighbours[Math.floor(Math.random() * neighbours.length)];
+        nextNode = neighbours[Math.floor(Math.random() * neighbours.length)];
 
-        this.currentNode.knockdownWallTo(nextCell);
-        nextCell.knockdownWallTo(this.currentNode);
+        this.currentNode.wallsToggle(nextNode);
+        nextNode.wallsToggle(this.currentNode);
 
-        this.nodeStack.push(nextCell);
+        this.nodeStack.push(nextNode);
         this.vistedNodes += 1;
 
-        this.currentNode = nextCell;
+        this.currentNode = nextNode;
         window.requestAnimationFrame(this.loop.bind(this));
       } else {
-        // console.log('2')
         this.currentNode = this.nodeStack.pop();
         this.loop();
       }
-      this.draw();
+      this.render();
     }
   }, {
-    key: 'draw',
-    value: function draw() {
-      // console.log('drawing--->')
-      this.ctx.fillStyle = 'blue';
+    key: 'render',
+    value: function render() {
+      this.ctx.fillStyle = 'yellow';
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
       for (var i = 0; i < this.width; i++) {
         for (var j = 0; j < this.height; j++) {
-          this.mazeMap[i][j].draw(this.ctx, {
-            cellWidth: this.nodeWidth,
-            cellHeight: this.nodeHeight,
-            cellOffset: this.nodeOffset,
-            cellSideLength: this.nodeSideLength,
-            cellHalfWidth: this.nodeHalfWidth
+          this.mazeMap[i][j].render(this.ctx, {
+            nodeWidth: this.nodeWidth,
+            nodeHeight: this.nodeHeight,
+            nodeOffset: this.nodeOffset,
+            nodeSideLength: this.nodeSideLength,
+            nodeHalfWidth: this.nodeHalfWidth
           });
         }
       }

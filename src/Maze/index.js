@@ -1,15 +1,15 @@
 import Node from './node'
 class Maze {
-  constructor(domEl) {
+  constructor(domEl, cb = null) {
     if (!domEl) {
       return new Error('require domEl')
     }
     this.canvas = document.querySelector(domEl)
-
+    this.cb = cb
     this.ctx = this.canvas.getContext('2d')
-    this.width = 6
-    this.height = 4
-    this.nodeSideLength = 12
+    this.width = 16
+    this.height = 8
+    this.nodeSideLength = 20 //12
 
     this.nodeOffset = Math.sin(Math.PI / 180 * 30) * this.nodeSideLength // sin (30°) * s
     this.nodeHalfWidth = Math.cos(Math.PI / 180 * 30) * this.nodeSideLength // distance: radius = cos( 30° ) * s
@@ -25,11 +25,11 @@ class Maze {
     this.init = this.init.bind(this)
     this.build = this.build.bind(this)
     this.loop = this.loop.bind(this)
-    this.draw = this.draw.bind(this)
+    this.render = this.render.bind(this)
   }
   init () {
     this.canvas.width = (this.width * this.nodeWidth) + this.nodeWidth
-    this.canvas.height = this.height * this.nodeHeight - 16
+    this.canvas.height = this.height * (this.nodeHeight / 2) + 100
     this.build()
   }
   build () {
@@ -40,14 +40,10 @@ class Maze {
         this.mazeMap[i][j] = new Node(i, j)
       }
     }
-    console.log(this.mazeMap)
-    // this.currentCell = this.mazeMap[0][0]
     const i = Math.floor(Math.random() * this.width)
     const j = Math.floor(Math.random() * this.height)
-    // console.log('i', i)
-    // console.log('j', j)
+
     this.currentNode = this.mazeMap[i][j] // random generator :D
-    // console.log('===>', this.currentCell)
     this.vistedNodes = 1
 
     this.loop()
@@ -55,45 +51,45 @@ class Maze {
   loop () {
     if (this.vistedNodes === this.totalNodes) {
       window.setTimeout(() => {
-        this.build()
+        // this.build() // restart
+        if (this.cb) {
+          this.cb(this)
+        }
       }, 2500)
       return
     }
     const neighbours = this.currentNode.getNeighbours(this.mazeMap)
-    // console.log('--neighbors->', neighbours)
-    let nextCell = null
+
+    let nextNode = null
     if(neighbours.length) {
-      // console.log('1')
-      nextCell = neighbours[Math.floor(Math.random() * neighbours.length)]
+      nextNode = neighbours[Math.floor(Math.random() * neighbours.length)]
 
-      this.currentNode.knockdownWallTo(nextCell)
-      nextCell.knockdownWallTo(this.currentNode)
+      this.currentNode.wallsToggle(nextNode)
+      nextNode.wallsToggle(this.currentNode)
 
-      this.nodeStack.push(nextCell)
+      this.nodeStack.push(nextNode)
       this.vistedNodes += 1
 
-      this.currentNode = nextCell
+      this.currentNode = nextNode
       window.requestAnimationFrame(this.loop.bind(this))
     } else {
-      // console.log('2')
       this.currentNode = this.nodeStack.pop()
       this.loop()
     }
-    this.draw()
+    this.render()
   }
-  draw () {
-    // console.log('drawing--->')
-    this.ctx.fillStyle = 'blue'
+  render () {
+    this.ctx.fillStyle = 'yellow'
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
 
     for(let i = 0; i < this.width; i++) {
       for(let j = 0; j < this.height; j++) {
-        this.mazeMap[i][j].draw(this.ctx, {
-          cellWidth: this.nodeWidth, 
-          cellHeight: this.nodeHeight, 
-          cellOffset: this.nodeOffset, 
-          cellSideLength: this.nodeSideLength, 
-          cellHalfWidth: this.nodeHalfWidth
+        this.mazeMap[i][j].render(this.ctx, {
+          nodeWidth: this.nodeWidth, 
+          nodeHeight: this.nodeHeight, 
+          nodeOffset: this.nodeOffset, 
+          nodeSideLength: this.nodeSideLength, 
+          nodeHalfWidth: this.nodeHalfWidth
         })
       }
     }

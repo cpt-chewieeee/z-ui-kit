@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.png';
 import './App.css';
 import { Hexagon, Maze } from 'z-ui-kit';
-// import {}
+
 class App extends Component {
   constructor(props) {
     super(props) 
@@ -18,7 +18,7 @@ class App extends Component {
     this.setState({ started: true })
   }
   componentDidMount () {
-    this.maze = new Maze('#maze-demo')
+    this.maze = new Maze('#maze-demo', (status) => this.setState({ started: false }))
   }
   handleClick (item) {
     console.log(item)
@@ -49,7 +49,7 @@ class App extends Component {
             '':
               <button className='maze-start' onClick={() => this.startMaze()}>Start</button>
           }
-          <canvas id='maze-demo' width='600' height='500' style={{backgroundColor: 'red'}} />
+          <canvas id='maze-demo' width='145' height='80' style={{backgroundColor: 'red'}} />
         </div>
       </div>
     );

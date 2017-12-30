@@ -7,8 +7,8 @@ class Node {
 
     this.getNeighbours = this.getNeighbours.bind(this)
     this.allWallsIntact = this.allWallsIntact.bind(this)
-    this.knockdownWallTo = this.knockdownWallTo.bind(this)
-    this.draw = this.draw.bind(this)
+    this.wallsToggle = this.wallsToggle.bind(this)
+    this.render = this.render.bind(this)
   }
   getNeighbours (maze) {
     const neighbours = []
@@ -42,7 +42,7 @@ class Node {
   allWallsIntact () {
     return (this.walls.join('') === '111111')
   }
-  knockdownWallTo (node) {
+  wallsToggle (node) {
     const x_diff = node.x - this.x
     const y_diff = node.y - this.y
     let wall = null
@@ -75,41 +75,41 @@ class Node {
    * @param {*} ctx 
    * @param {object} stats - { cellWidth, cellHeight, cellOffset, cellSideLength, cellHalfWidth} 
    */
-  draw (ctx, stats) {
+  render (ctx, stats) {
     // console.log('--1->', ctx)
     // console.log('--2->', stats)
     if (this.allWallsIntact()) return
-    let px = this.x * stats.cellWidth
-    const py = this.y * (stats.cellOffset + stats.cellSideLength)
+    let px = this.x * stats.nodeWidth
+    const py = this.y * (stats.nodeOffset + stats.nodeSideLength)
 
     if (this.y % 2 !== 0) {
-      px += stats.cellHalfWidth
+      px += stats.nodeHalfWidth
     }
     ctx.beginPath()
 
     if (this.walls[0]) { 
-      ctx.moveTo(px + stats.cellHalfWidth, py)
-      ctx.lineTo(px + stats.cellWidth, py + stats.cellOffset)
+      ctx.moveTo(px + stats.nodeHalfWidth, py)
+      ctx.lineTo(px + stats.nodeWidth, py + stats.nodeOffset)
     }
     if (this.walls[1]) { 
-      ctx.moveTo(px + stats.cellWidth, py + stats.cellOffset)
-      ctx.lineTo(px + stats.cellWidth, py + stats.cellHeight - stats.cellOffset)
+      ctx.moveTo(px + stats.nodeWidth, py + stats.nodeOffset)
+      ctx.lineTo(px + stats.nodeWidth, py + stats.nodeHeight - stats.nodeOffset)
     }
     if (this.walls[2]) { 
-      ctx.moveTo(px + stats.cellWidth, py + stats.cellHeight - stats.cellOffset)
-      ctx.lineTo(px + stats.cellHalfWidth, py + stats.cellHeight)
+      ctx.moveTo(px + stats.nodeWidth, py + stats.nodeHeight - stats.nodeOffset)
+      ctx.lineTo(px + stats.nodeHalfWidth, py + stats.nodeHeight)
     }
     if (this.walls[3]) { 
-      ctx.moveTo(px + stats.cellHalfWidth, py + stats.cellHeight)
-      ctx.lineTo(px, py + stats.cellHeight - stats.cellOffset)
+      ctx.moveTo(px + stats.nodeHalfWidth, py + stats.nodeHeight)
+      ctx.lineTo(px, py + stats.nodeHeight - stats.nodeOffset)
     }
     if (this.walls[4]) { 
-      ctx.moveTo(px, py + stats.cellHeight - stats.cellOffset)
-      ctx.lineTo(px, py + stats.cellOffset)
+      ctx.moveTo(px, py + stats.nodeHeight - stats.nodeOffset)
+      ctx.lineTo(px, py + stats.nodeOffset)
     }
     if (this.walls[5]) { 
-      ctx.moveTo(px, py + stats.cellOffset)
-      ctx.lineTo(px + stats.cellHalfWidth, py)
+      ctx.moveTo(px, py + stats.nodeOffset)
+      ctx.lineTo(px + stats.nodeHalfWidth, py)
     }
 
     ctx.closePath()
