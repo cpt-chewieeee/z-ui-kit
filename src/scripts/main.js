@@ -1,3 +1,4 @@
 import hexagon from '../HexagonList'
-
-export const Hexagon = hexagon
+import maze from '../Maze';
+export const Hexagon = hexagon;
+export const Maze = maze;

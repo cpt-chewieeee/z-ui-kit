@@ -331,6 +331,263 @@ HexagonList.propTypes = {
   onClick: PropTypes.func
 };
 
+var Node = function () {
+  function Node(x, y) {
+    classCallCheck(this, Node);
+
+    this.x = x;
+    this.y = y;
+
+    this.walls = [1, 1, 1, 1, 1, 1]; // [ne, e, se, sw, w, nw]
+
+    this.getNeighbours = this.getNeighbours.bind(this);
+    this.allWallsIntact = this.allWallsIntact.bind(this);
+    this.knockdownWallTo = this.knockdownWallTo.bind(this);
+    this.draw = this.draw.bind(this);
+  }
+
+  createClass(Node, [{
+    key: 'getNeighbours',
+    value: function getNeighbours(maze) {
+      var neighbours = [];
+      var x = this.x;
+      var y = this.y;
+      var intactNeightbours = [];
+
+      if (y % 2 !== 0) {
+        // odd
+        if (maze[x + 1] && maze[x + 1][y - 1]) neighbours.push(maze[x + 1][y - 1]); // ne
+        if (maze[x + 1] && maze[x + 1][y + 0]) neighbours.push(maze[x + 1][y]); // e
+        if (maze[x + 1] && maze[x + 1][y + 1]) neighbours.push(maze[x + 1][y + 1]); // se
+
+        if (maze[x][y + 1]) neighbours.push(maze[x][y + 1]); // sw
+        if (maze[x - 1] && maze[x - 1][y + 0]) neighbours.push(maze[x - 1][y]); // w
+        if (maze[x][y - 1]) neighbours.push(maze[x][y - 1]); // nw
+      } else {
+        // even
+        if (maze[x + 0][y - 1]) neighbours.push(maze[x][y - 1]); //ne
+        if (maze[x + 1] && maze[x + 1][y + 0]) neighbours.push(maze[x + 1][y]); //e
+        if (maze[x + 0][y + 1]) neighbours.push(maze[x][y + 1]); //se
+
+        if (maze[x - 1] && maze[x - 1][y + 1]) neighbours.push(maze[x - 1][y + 1]); //sw
+        if (maze[x - 1] && maze[x - 1][y + 0]) neighbours.push(maze[x - 1][y]); //w
+        if (maze[x - 1] && maze[x - 1][y - 1]) neighbours.push(maze[x - 1][y - 1]); //nw
+      }
+
+      for (var i = 0; i < neighbours.length; i++) {
+        if (neighbours[i].allWallsIntact()) intactNeightbours.push(neighbours[i]);
+      }
+      return intactNeightbours;
+    }
+  }, {
+    key: 'allWallsIntact',
+    value: function allWallsIntact() {
+      return this.walls.join('') === '111111';
+    }
+  }, {
+    key: 'knockdownWallTo',
+    value: function knockdownWallTo(node) {
+      var x_diff = node.x - this.x;
+      var y_diff = node.y - this.y;
+      var wall = null;
+
+      // edge cases:
+      if (y_diff === 0 && x_diff === 1) wall = 1; // e
+      if (y_diff === 0 && x_diff === -1) wall = 4; //w
+
+      if (y_diff === -1 && x_diff === -1) wall = 5; //nw
+      if (y_diff === -1 && x_diff === 1) wall = 0; //ne
+
+      if (y_diff === 1 && x_diff === -1) wall = 3; //sw
+      if (y_diff === 1 && x_diff === 1) wall = 2; //se
+
+      // even
+      if (x_diff === 0 && this.y % 2 === 0) {
+        if (y_diff === -1) wall = 0; // ne
+        if (y_diff === 1) wall = 2; // se
+      }
+      // odd
+      if (x_diff === 0 && this.y % 2 !== 0) {
+        if (y_diff === -1) wall = 5; // nw
+        if (y_diff === 1) wall = 3; // sw
+      }
+
+      this.walls[wall] = 0;
+    }
+    /**
+     * 
+     * @param {*} ctx 
+     * @param {object} stats - { cellWidth, cellHeight, cellOffset, cellSideLength, cellHalfWidth} 
+     */
+
+  }, {
+    key: 'draw',
+    value: function draw(ctx, stats) {
+      // console.log('--1->', ctx)
+      // console.log('--2->', stats)
+      if (this.allWallsIntact()) return;
+      var px = this.x * stats.cellWidth;
+      var py = this.y * (stats.cellOffset + stats.cellSideLength);
+
+      if (this.y % 2 !== 0) {
+        px += stats.cellHalfWidth;
+      }
+      ctx.beginPath();
+
+      if (this.walls[0]) {
+        ctx.moveTo(px + stats.cellHalfWidth, py);
+        ctx.lineTo(px + stats.cellWidth, py + stats.cellOffset);
+      }
+      if (this.walls[1]) {
+        ctx.moveTo(px + stats.cellWidth, py + stats.cellOffset);
+        ctx.lineTo(px + stats.cellWidth, py + stats.cellHeight - stats.cellOffset);
+      }
+      if (this.walls[2]) {
+        ctx.moveTo(px + stats.cellWidth, py + stats.cellHeight - stats.cellOffset);
+        ctx.lineTo(px + stats.cellHalfWidth, py + stats.cellHeight);
+      }
+      if (this.walls[3]) {
+        ctx.moveTo(px + stats.cellHalfWidth, py + stats.cellHeight);
+        ctx.lineTo(px, py + stats.cellHeight - stats.cellOffset);
+      }
+      if (this.walls[4]) {
+        ctx.moveTo(px, py + stats.cellHeight - stats.cellOffset);
+        ctx.lineTo(px, py + stats.cellOffset);
+      }
+      if (this.walls[5]) {
+        ctx.moveTo(px, py + stats.cellOffset);
+        ctx.lineTo(px + stats.cellHalfWidth, py);
+      }
+
+      ctx.closePath();
+      ctx.strokeStyle = 'black';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  }]);
+  return Node;
+}();
+
+var Maze$1 = function () {
+  function Maze(domEl) {
+    classCallCheck(this, Maze);
+
+    if (!domEl) {
+      return new Error('require domEl');
+    }
+    this.canvas = document.querySelector(domEl);
+
+    this.ctx = this.canvas.getContext('2d');
+    this.width = 6;
+    this.height = 4;
+    this.nodeSideLength = 12;
+
+    this.nodeOffset = Math.sin(Math.PI / 180 * 30) * this.nodeSideLength; // sin (30°) * s
+    this.nodeHalfWidth = Math.cos(Math.PI / 180 * 30) * this.nodeSideLength; // distance: radius = cos( 30° ) * s
+    this.nodeWidth = 2 * this.nodeHalfWidth; // height around rectangle: b = s + 2 * h
+    this.nodeHeight = this.nodeSideLength + 2 * this.nodeOffset; // width around rectangle: a = 2 * r
+
+    this.mazeMap = [];
+    this.nodeStack = [];
+    this.currentNode = null;
+    this.vistedNodes = 0;
+    this.totalNodes = this.width * this.height;
+
+    this.init = this.init.bind(this);
+    this.build = this.build.bind(this);
+    this.loop = this.loop.bind(this);
+    this.draw = this.draw.bind(this);
+  }
+
+  createClass(Maze, [{
+    key: 'init',
+    value: function init() {
+      this.canvas.width = this.width * this.nodeWidth + this.nodeWidth;
+      this.canvas.height = this.height * this.nodeHeight - 16;
+      this.build();
+    }
+  }, {
+    key: 'build',
+    value: function build() {
+      for (var _i = 0; _i < this.width; _i++) {
+        for (var _j = 0; _j < this.height; _j++) {
+          if (!this.mazeMap[_i]) {
+            this.mazeMap[_i] = [];
+          }
+
+          this.mazeMap[_i][_j] = new Node(_i, _j);
+        }
+      }
+      console.log(this.mazeMap);
+      // this.currentCell = this.mazeMap[0][0]
+      var i = Math.floor(Math.random() * this.width);
+      var j = Math.floor(Math.random() * this.height);
+      // console.log('i', i)
+      // console.log('j', j)
+      this.currentNode = this.mazeMap[i][j]; // random generator :D
+      // console.log('===>', this.currentCell)
+      this.vistedNodes = 1;
+
+      this.loop();
+    }
+  }, {
+    key: 'loop',
+    value: function loop() {
+      var _this = this;
+
+      if (this.vistedNodes === this.totalNodes) {
+        window.setTimeout(function () {
+          _this.build();
+        }, 2500);
+        return;
+      }
+      var neighbours = this.currentNode.getNeighbours(this.mazeMap);
+      // console.log('--neighbors->', neighbours)
+      var nextCell = null;
+      if (neighbours.length) {
+        // console.log('1')
+        nextCell = neighbours[Math.floor(Math.random() * neighbours.length)];
+
+        this.currentNode.knockdownWallTo(nextCell);
+        nextCell.knockdownWallTo(this.currentNode);
+
+        this.nodeStack.push(nextCell);
+        this.vistedNodes += 1;
+
+        this.currentNode = nextCell;
+        window.requestAnimationFrame(this.loop.bind(this));
+      } else {
+        // console.log('2')
+        this.currentNode = this.nodeStack.pop();
+        this.loop();
+      }
+      this.draw();
+    }
+  }, {
+    key: 'draw',
+    value: function draw() {
+      // console.log('drawing--->')
+      this.ctx.fillStyle = 'blue';
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+      for (var i = 0; i < this.width; i++) {
+        for (var j = 0; j < this.height; j++) {
+          this.mazeMap[i][j].draw(this.ctx, {
+            cellWidth: this.nodeWidth,
+            cellHeight: this.nodeHeight,
+            cellOffset: this.nodeOffset,
+            cellSideLength: this.nodeSideLength,
+            cellHalfWidth: this.nodeHalfWidth
+          });
+        }
+      }
+    }
+  }]);
+  return Maze;
+}();
+
 var Hexagon = HexagonList;
+var Maze = Maze$1;
 
 exports.Hexagon = Hexagon;
+exports.Maze = Maze;
