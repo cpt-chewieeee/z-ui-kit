@@ -1,0 +1,15 @@
+.fancy-input-container {
+  display: flex;
+  margin: 10px 0;
+}
+.fancy-label {
+  background-color: #DBE9F0;
+  flex: 1 30%;
+  text-align: center;
+  line-height: 34px;
+}
+.fancy-input {
+  flex: 1 70%;
+  border: none;
+  background-color: #ffffff;
+}

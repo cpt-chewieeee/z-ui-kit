@@ -1,4 +1,5 @@
-import hexagon from '../HexagonList'
-import maze from '../Maze';
-export const Hexagon = hexagon;
-export const Maze = maze;
+export Hexagon from '../HexagonList'
+export Maze from '../Maze'
+export IconButton from '../buttons/IconButton'
+export Header from '../headers/Header'
+export FancyInput from '../inputs/FancyInput'

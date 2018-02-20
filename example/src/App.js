@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.png';
 import './App.css';
-import { Hexagon, Maze } from 'z-ui-kit';
+import { Hexagon, Maze, IconButton, Header } from 'z-ui-kit';
 
 class App extends Component {
   constructor(props) {
@@ -32,7 +32,10 @@ class App extends Component {
     }
     return (
       <div className="App">
+        <Header>
+          <div>hello world</div>
 
+        </Header>
         <Hexagon 
           list={list}
           defaultIcon={logo}
@@ -51,6 +54,23 @@ class App extends Component {
           }
           <canvas id='maze-demo' width='145' height='80' style={{backgroundColor: 'red'}} />
         </div>
+
+      <hr />
+      <IconButton handleClick={e => { console.log('home click', e) }}>
+        <i className='fas fa-home' />
+      </IconButton>
+      <IconButton handleClick={e => { console.log('home click', e) }}>
+        <i className='fas fa-home' />
+      </IconButton>
+      <IconButton handleClick={e => { console.log('home click', e) }}>
+        <i className='fas fa-home' />
+      </IconButton>
+      <IconButton style={{ float: 'right' }} handleClick={e => { console.log('home click', e) }}>
+        <i className='fas fa-home' />
+      </IconButton>
+      <IconButton style={{ float: 'right' }} handleClick={e => { console.log('home click', e) }}>
+        <i className='fas fa-home' />
+      </IconButton>
       </div>
     );
   }

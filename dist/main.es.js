@@ -166,6 +166,20 @@ var createClass = function () {
 
 
 
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
 
 
 var inherits = function (subClass, superClass) {
@@ -462,7 +476,7 @@ var Node = function () {
   return Node;
 }();
 
-var Maze$1 = function () {
+var Maze = function () {
   function Maze(domEl) {
     var cb = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     classCallCheck(this, Maze);
@@ -577,7 +591,189 @@ var Maze$1 = function () {
   return Maze;
 }();
 
-var Hexagon = HexagonList;
-var Maze = Maze$1;
+var ButtonComponent = function (_React$PureComponent) {
+  inherits(ButtonComponent, _React$PureComponent);
 
-export { Hexagon, Maze };
+  function ButtonComponent(props, context) {
+    classCallCheck(this, ButtonComponent);
+
+    var _this = possibleConstructorReturn(this, (ButtonComponent.__proto__ || Object.getPrototypeOf(ButtonComponent)).call(this, props, context));
+
+    _this.handleClick = _this.handleClick.bind(_this);
+    return _this;
+  }
+  /** Mounting */
+
+
+  createClass(ButtonComponent, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {} // 1
+
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {} // 2
+    /*************/
+    /** Updating */
+
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps() {} // 1
+    /* shouldComponentUpdate () {} */
+
+  }, {
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate() {} // 2
+
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {} // 3
+    /*************/
+    /** Unmounting && error handling */
+
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {}
+  }, {
+    key: 'componentDidCatch',
+    value: function componentDidCatch() {}
+    /*************/
+
+    /** render */
+    /* render () {} */
+
+    /** misc */
+
+  }, {
+    key: 'handleClick',
+    value: function handleClick(e) {
+      e.preventDefault();
+      this.props.handleClick(e);
+    }
+    /*************/
+
+  }]);
+  return ButtonComponent;
+}(React.PureComponent);
+
+ButtonComponent.proptTypes = {
+  style: PropTypes.object,
+  handleClick: PropTypes.func.isRequired
+};
+ButtonComponent.defaultProps = {
+  style: {}
+};
+
+__$styleInject(".btn {\n  float: left;\n  margin: 2px;\n  width: 32px;\n  height: 32px;\n  border: 1px solid #A7B9C3;\n  border-radius: 50%;\n  background: #DBE9F0;\n  box-shadow: 0 2px 3px -1px rgba(0,0,0, 1);\n  color: #4A5359;\n  text-align: center;\n  text-shadow: 0 1px 0 #fff;\n\n  line-height: 32px;\n  cursor: pointer;\n  transition: color .2s ease-in;\n  -webkit-touch-callout: none;\n  user-select: none;\n}\n.btn:hover {\n  color: #2ED053;\n}\n.active {\n  border-color: #2FAA4C;\n  background: #2ED053;\n\n  box-shadow: inset 0 1px 3px -1px rgba(0,0,0, .7);\n  color: #fff;\n  text-shadow: 0 1px 0 #2B9F45;\n  transition: none;\n}", undefined);
+
+var IconButton = function (_ButtonComponent) {
+  inherits(IconButton, _ButtonComponent);
+
+  function IconButton() {
+    classCallCheck(this, IconButton);
+    return possibleConstructorReturn(this, (IconButton.__proto__ || Object.getPrototypeOf(IconButton)).apply(this, arguments));
+  }
+
+  createClass(IconButton, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'button',
+        {
+          style: _extends({}, this.props.style),
+          onClick: this.handleClick,
+          className: 'btn' + ' ' + (this.props.isActivate ? 'active' : '') },
+        this.props.children
+      );
+    }
+  }]);
+  return IconButton;
+}(ButtonComponent);
+
+IconButton.propTypes = {
+  isActivate: PropTypes.bool,
+  children: PropTypes.any
+};
+IconButton.defaultProps = {
+  isActivate: false
+};
+
+__$styleInject(".reusable-header {\n  background-color: transparent;\n  height: 40px;\n}", undefined);
+
+var Header = function (_React$PureComponent) {
+  inherits(Header, _React$PureComponent);
+
+  function Header() {
+    classCallCheck(this, Header);
+    return possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).apply(this, arguments));
+  }
+
+  createClass(Header, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'header',
+        { className: 'reusable-header', style: _extends({}, this.props.style) },
+        this.props.children ? this.props.children : null
+      );
+    }
+  }]);
+  return Header;
+}(React.PureComponent);
+
+var InputComponent = function (_React$Component) {
+  inherits(InputComponent, _React$Component);
+
+  function InputComponent() {
+    classCallCheck(this, InputComponent);
+    return possibleConstructorReturn(this, (InputComponent.__proto__ || Object.getPrototypeOf(InputComponent)).apply(this, arguments));
+  }
+
+  return InputComponent;
+}(React.Component);
+
+InputComponent.propTypes = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  type: PropTypes.string,
+  label: PropTypes.string.isRequired,
+  style: PropTypes.object,
+  labelStyle: PropTypes.object
+};
+InputComponent.defaultProps = {
+  type: 'text',
+  style: {},
+  labelStyle: {}
+  // constructor(props, context) {
+
+  // }
+};
+
+__$styleInject(".fancy-input-container {\n  display: flex;\n  margin: 10px 0;\n}\n.fancy-label {\n  background-color: #DBE9F0;\n  flex: 1 30%;\n  text-align: center;\n  line-height: 34px;\n}\n.fancy-input {\n  flex: 1 70%;\n  border: none;\n  background-color: #ffffff;\n}", undefined);
+
+var FancyInput = function (_InputComponent) {
+  inherits(FancyInput, _InputComponent);
+
+  function FancyInput() {
+    classCallCheck(this, FancyInput);
+    return possibleConstructorReturn(this, (FancyInput.__proto__ || Object.getPrototypeOf(FancyInput)).apply(this, arguments));
+  }
+
+  createClass(FancyInput, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'div',
+        { className: 'fancy-input-container', style: _extends({}, this.props.style) },
+        React.createElement(
+          'label',
+          { style: _extends({}, this.props.labelStyle), className: 'fancy-label' },
+          this.props.label
+        ),
+        React.createElement('input', { className: 'fancy-input', type: this.props.type, onChange: this.props.onChange })
+      );
+    }
+  }]);
+  return FancyInput;
+}(InputComponent);
+
+export { HexagonList as Hexagon, Maze, IconButton, Header, FancyInput };
