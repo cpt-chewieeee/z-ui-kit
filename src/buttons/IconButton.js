@@ -16,7 +16,7 @@ export default class IconButton extends ButtonComponent {
       <button
         style={{ ...this.props.style }}
         onClick={this.handleClick}
-        className={'btn' + ' ' + (this.props.isActivate ? 'active' : '')}>
+        className={'btn-icon' + ' ' + (this.props.isActivate ? 'active' : '')}>
         {this.props.children}
       </button>
     )

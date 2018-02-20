@@ -6,7 +6,7 @@ export default class FancyInput extends InputComponent {
     return (
       <div className='fancy-input-container' style={{ ...this.props.style }}>
         <label style={{ ...this.props.labelStyle }} className='fancy-label'>{this.props.label}</label>
-        <input className='fancy-input' type={this.props.type} onChange={this.props.onChange}/>
+        <input className='fancy-input' value={this.props.value} type={this.props.type} onChange={this.props.onChange}/>
       </div>
     )
   }

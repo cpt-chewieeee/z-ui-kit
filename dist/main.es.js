@@ -663,7 +663,7 @@ ButtonComponent.defaultProps = {
   style: {}
 };
 
-__$styleInject(".btn {\n  float: left;\n  margin: 2px;\n  width: 32px;\n  height: 32px;\n  border: 1px solid #A7B9C3;\n  border-radius: 50%;\n  background: #DBE9F0;\n  box-shadow: 0 2px 3px -1px rgba(0,0,0, 1);\n  color: #4A5359;\n  text-align: center;\n  text-shadow: 0 1px 0 #fff;\n\n  line-height: 32px;\n  cursor: pointer;\n  transition: color .2s ease-in;\n  -webkit-touch-callout: none;\n  user-select: none;\n}\n.btn:hover {\n  color: #2ED053;\n}\n.active {\n  border-color: #2FAA4C;\n  background: #2ED053;\n\n  box-shadow: inset 0 1px 3px -1px rgba(0,0,0, .7);\n  color: #fff;\n  text-shadow: 0 1px 0 #2B9F45;\n  transition: none;\n}", undefined);
+__$styleInject(".btn-icon {\n  float: left;\n  margin: 2px;\n  width: 32px;\n  height: 32px;\n  border: 1px solid #A7B9C3;\n  border-radius: 50%;\n  background: #DBE9F0;\n  box-shadow: 0 2px 3px -1px rgba(0,0,0, 1);\n  color: #4A5359;\n  text-align: center;\n  text-shadow: 0 1px 0 #fff;\n\n  line-height: 32px;\n  cursor: pointer;\n  transition: color .2s ease-in;\n  -webkit-touch-callout: none;\n  user-select: none;\n}\n.btn-icon:hover {\n  color: #2ED053;\n}\n.active {\n  border-color: #2FAA4C;\n  background: #2ED053;\n\n  box-shadow: inset 0 1px 3px -1px rgba(0,0,0, .7);\n  color: #fff;\n  text-shadow: 0 1px 0 #2B9F45;\n  transition: none;\n}", undefined);
 
 var IconButton = function (_ButtonComponent) {
   inherits(IconButton, _ButtonComponent);
@@ -681,7 +681,7 @@ var IconButton = function (_ButtonComponent) {
         {
           style: _extends({}, this.props.style),
           onClick: this.handleClick,
-          className: 'btn' + ' ' + (this.props.isActivate ? 'active' : '') },
+          className: 'btn-icon' + ' ' + (this.props.isActivate ? 'active' : '') },
         this.props.children
       );
     }
@@ -769,11 +769,46 @@ var FancyInput = function (_InputComponent) {
           { style: _extends({}, this.props.labelStyle), className: 'fancy-label' },
           this.props.label
         ),
-        React.createElement('input', { className: 'fancy-input', type: this.props.type, onChange: this.props.onChange })
+        React.createElement('input', { className: 'fancy-input', value: this.props.value, type: this.props.type, onChange: this.props.onChange })
       );
     }
   }]);
   return FancyInput;
 }(InputComponent);
 
-export { HexagonList as Hexagon, Maze, IconButton, Header, FancyInput };
+__$styleInject(".btn-text {\n  margin-bottom: 40px;\n  text-align: center;\n  width: 100%;\n  display: block;\n  cursor: pointer;\n}\n.crisp{\n  font-size: 16px;\n  font-weight: bold;\n  color: #3275C3;\n  line-height: 1.5;\n  padding: .5em 2em;\n  background: #EBF4FF;\n  border: 1px solid #72ABED;\n  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.20);\n  border-radius: 5px;\n} \n.crisp:hover {\n  border: 1px solid #4A75A8;\n  color: #2ED053;\n}", undefined);
+
+var TextButton = function (_ButtonComponent) {
+  inherits(TextButton, _ButtonComponent);
+
+  function TextButton() {
+    classCallCheck(this, TextButton);
+    return possibleConstructorReturn(this, (TextButton.__proto__ || Object.getPrototypeOf(TextButton)).apply(this, arguments));
+  }
+
+  createClass(TextButton, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'button',
+        {
+          type: this.props.type,
+          onClick: this.handleClick,
+          style: _extends({}, this.props.style),
+          className: 'btn-text crisp' },
+        this.props.text
+      );
+    }
+  }]);
+  return TextButton;
+}(ButtonComponent);
+
+TextButton.propTypes = {
+  text: PropTypes.string.isRequired,
+  type: PropTypes.string
+};
+TextButton.defaultProps = {
+  type: 'text'
+};
+
+export { HexagonList as Hexagon, Maze, IconButton, Header, FancyInput, TextButton };

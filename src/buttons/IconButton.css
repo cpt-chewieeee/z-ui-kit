@@ -1,4 +1,4 @@
-.btn {
+.btn-icon {
   float: left;
   margin: 2px;
   width: 32px;
@@ -17,7 +17,7 @@
   -webkit-touch-callout: none;
   user-select: none;
 }
-.btn:hover {
+.btn-icon:hover {
   color: #2ED053;
 }
 .active {

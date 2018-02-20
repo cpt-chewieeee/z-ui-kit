@@ -1,0 +1,22 @@
+.btn-text {
+  margin-bottom: 40px;
+  text-align: center;
+  width: 100%;
+  display: block;
+  cursor: pointer;
+}
+.crisp{
+  font-size: 16px;
+  font-weight: bold;
+  color: #3275C3;
+  line-height: 1.5;
+  padding: .5em 2em;
+  background: #EBF4FF;
+  border: 1px solid #72ABED;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.20);
+  border-radius: 5px;
+} 
+.crisp:hover {
+  border: 1px solid #4A75A8;
+  color: #2ED053;
+}
